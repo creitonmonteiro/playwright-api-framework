@@ -14,10 +14,26 @@ export default class ProductsClient extends BaseClient {
    * @param {int} product.quantidade
    * @returns {Promise<Response>}
    */
-  async createProduct (product, token) {
+  async createProduct (product, bearerToken) {
     return this.request.post ('/produtos', {
       data: product,
-      headers: {Authorization: token},
+      headers: {Authorization: bearerToken},
+    });
+  }
+
+  /**
+   * Update product
+   * @param {Object} product
+   * @param {string} product.nome
+   * @param {int} product.preco
+   * @param {string} product.descricao
+   * @param {int} product.quantidade
+   * @returns {Promise<Response>}
+   */
+  async updateProduct (product, bearerToken) {
+    return this.request.post ('/produtos', {
+      data: product,
+      headers: {Authorization: bearerToken},
     });
   }
 }

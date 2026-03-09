@@ -5,8 +5,8 @@ export default class ProductService {
     this.productsClient = productsClient;
   }
 
-  async createProduct (product, expectedStatus = 201) {
-    const response = await this.productsClient.createProduct (product);
+  async createProduct (product, bearerToken, expectedStatus = 201) {
+    const response = await this.productsClient.createProduct (product, bearerToken);
 
     expect (response.status ()).toBe (expectedStatus);
 
