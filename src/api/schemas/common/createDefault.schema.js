@@ -1,4 +1,4 @@
-export const createUserSchema = {
+export const createDefaultSchema = {
   type: 'object',
   required: ['message', '_id'],
   properties: {
