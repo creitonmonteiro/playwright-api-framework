@@ -9,7 +9,7 @@ import UserService from '@services/UserService';
 import {validateSchema} from '@utils/schemaValidator';
 
 import {loginSchema} from '@schemas/user/login.schema.js';
-import {errorSchema} from '@schemas/common/error.schema.js';
+import {defaultSchema} from '@schemas/common/default.schema.js';
 
 import {createUserPayload} from '@factories/userFactory';
 import userData from '@fixtures/users.json';
@@ -53,7 +53,7 @@ test.describe ('Login API', () => {
     });
 
     await test.step ('validate invalid login', async () => {
-      validateSchema (errorSchema, body);
+      validateSchema (defaultSchema, body);
 
       expect (body.message).toBe ('Email e/ou senha inválidos');
     });

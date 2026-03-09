@@ -29,10 +29,10 @@ export default class UserService {
     return response.json ();
   }
 
-  async getUser (id) {
+  async getUser (id, expectedStatus = 200 ) {
     const response = await this.usersClient.getUser (id);
 
-    expect (response.status ()).toBe (200);
+    expect (response.status ()).toBe (expectedStatus);
 
     return response.json ();
   }

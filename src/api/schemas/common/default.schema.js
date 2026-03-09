@@ -1,4 +1,4 @@
-export const errorSchema = {
+export const defaultSchema = {
   type: 'object',
   required: ['message'],
   properties: {

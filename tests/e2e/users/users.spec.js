@@ -10,7 +10,8 @@ import {deleteUserIfExists} from '@utils/userHelper';
 import {validateSchema} from '@utils/schemaValidator';
 
 import {createUserSchema} from '@schemas/user/createUser.schema';
-import {errorSchema} from '@schemas/common/error.schema.js';
+import {defaultSchema} from '@schemas/common/default.schema.js';
+import { findUserSchema } from '@schemas/user/findUser.schema';
 
 import userData from '@fixtures/users.json';
 
@@ -60,9 +61,118 @@ test.describe ('User API', () => {
     });
 
     await test.step ('validate user created', async () => {
-      validateSchema (errorSchema, body);
+      validateSchema (defaultSchema, body);
 
       expect (body.message).toBe ('Este email já está sendo usado');
+    });
+  });
+
+  test ('should update a user successfully', async ({request}) => {
+    const usersClient = new UsersClient (request);
+
+    const userService = new UserService (usersClient);
+
+    const fakeUser = createUserPayload ();
+
+    let body;
+    let userId;
+
+    await test.step ('create user', async () => {
+      const response = await userService.createUser (fakeUser);
+      userId = response._id;
+    });
+
+    await test.step ('update user', async () => {
+      body = await userService.updateUser (userId, fakeUser);
+    });
+
+    await test.step ('validate user updated', async () => {
+      validateSchema (defaultSchema, body);
+      expect (body.message).toBe ('Registro alterado com sucesso');
+    });
+  });
+
+  test ('should delete a user successfully', async ({request}) => {
+    const usersClient = new UsersClient (request);
+
+    const userService = new UserService (usersClient);
+
+    const fakeUser = createUserPayload ();
+
+    let body;
+    let userId;
+
+    await test.step ('create user', async () => {
+      const response = await userService.createUser (fakeUser);
+      userId = response._id;
+    });
+
+    await test.step ('delete user', async () => {
+      body = await userService.deleteUser (userId);
+    });
+
+    await test.step ('validate user updated', async () => {
+      validateSchema (defaultSchema, body);
+      expect (body.message).toBe ('Registro excluído com sucesso');
+    });
+  });
+
+  test ('should be delete a user by invalid id', async ({request}) => {
+    const usersClient = new UsersClient (request);
+
+    const userService = new UserService (usersClient);
+
+    let body;
+
+    await test.step ('search user', async () => {
+      body = await userService.deleteUser ('0pxpPY0cbmQhpYz1');
+    });
+
+    await test.step ('validate user deleted', async () => {
+      validateSchema (defaultSchema, body);
+      expect (body.message).toBe ('Nenhum registro excluído');
+    });
+  });
+
+  test ('should be find a user by id successfully', async ({request}) => {
+    const usersClient = new UsersClient (request);
+
+    const userService = new UserService (usersClient);
+
+    const fakeUser = createUserPayload ();
+
+    let body;
+    let response;
+
+    await test.step ('create user', async () => {
+      response = await userService.createUser (fakeUser);
+    });
+
+    await test.step ('search user', async () => {
+      body = await userService.getUser (response._id);
+    });
+
+    await test.step ('validate user searched', async () => {
+      validateSchema (findUserSchema, body);
+      expect (body.email).toBe (fakeUser.email);
+      expect (body.password).toBe(fakeUser.password);
+    });
+  });
+
+  test ('should be find a user by invalid id', async ({request}) => {
+    const usersClient = new UsersClient (request);
+
+    const userService = new UserService (usersClient);
+
+    let body;
+
+    await test.step ('search user', async () => {
+      body = await userService.getUser ('0pxpPY0cbmQhpYz1', 400);
+    });
+
+    await test.step ('validate user searched', async () => {
+      validateSchema (defaultSchema, body);
+      expect (body.message).toBe ('Usuário não encontrado');
     });
   });
 });
