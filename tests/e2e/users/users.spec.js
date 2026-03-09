@@ -9,7 +9,7 @@ import {deleteUserIfExists} from '@utils/userHelper';
 
 import {validateSchema} from '@utils/schemaValidator';
 
-import {createUserSchema} from '@schemas/user/createUser.schema';
+import {createDefaultSchema} from '@schemas/common/createDefault.schema';
 import {defaultSchema} from '@schemas/common/default.schema.js';
 import { findUserSchema } from '@schemas/user/findUser.schema';
 
@@ -30,7 +30,7 @@ test.describe ('User API', () => {
     });
 
     await test.step ('validate user created', async () => {
-      validateSchema (createUserSchema, body);
+      validateSchema (createDefaultSchema, body);
 
       expect (body.message).toBe ('Cadastro realizado com sucesso');
     });
@@ -53,7 +53,7 @@ test.describe ('User API', () => {
 
     await test.step ('create user successfully', async () => {
       body = await userService.createUser (duplicateUser);
-      validateSchema (createUserSchema, body);
+      validateSchema (createDefaultSchema, body);
     });
 
     await test.step ('create user duplicated', async () => {
@@ -89,6 +89,25 @@ test.describe ('User API', () => {
     await test.step ('validate user updated', async () => {
       validateSchema (defaultSchema, body);
       expect (body.message).toBe ('Registro alterado com sucesso');
+    });
+  });
+
+  test ('should update a user by invalid id', async ({request}) => {
+    const usersClient = new UsersClient (request);
+
+    const userService = new UserService (usersClient);
+
+    const fakeUser = createUserPayload ();
+
+    let body;
+
+    await test.step ('update user', async () => {
+      body = await userService.updateUser ('0pxpPY0cbmQhpYz1', fakeUser, 400);
+    });
+
+    await test.step ('validate user updated', async () => {
+      validateSchema (defaultSchema, body);
+      expect (body.message).toBe ('Usuário não encontrado');
     });
   });
 
