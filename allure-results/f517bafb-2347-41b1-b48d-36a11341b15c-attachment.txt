@@ -1,5 +1,0 @@
-{
-  _id: '1773079717839',
-  email: 'Luz.Schuppe37@gmail.com',
-  password: 'wuqFQdeMSzlxO0Z'
-}
