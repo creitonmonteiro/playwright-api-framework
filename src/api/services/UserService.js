@@ -13,23 +13,23 @@ export default class UserService {
     return response.json ();
   }
 
-  async updateUser (id, user) {
+  async updateUser (id, user, expectedStatus = 200) {
     const response = await this.usersClient.updateUser (id, user);
 
-    expect (response.status ()).toBe (200);
+    expect (response.status ()).toBe (expectedStatus);
 
     return response.json ();
   }
 
-  async deleteUser (id) {
+  async deleteUser (id, expectedStatus = 200) {
     const response = await this.usersClient.deleteUser (id);
 
-    expect (response.status ()).toBe (200);
+    expect (response.status ()).toBe (expectedStatus);
 
     return response.json ();
   }
 
-  async getUser (id, expectedStatus = 200 ) {
+  async getUser (id, expectedStatus = 200) {
     const response = await this.usersClient.getUser (id);
 
     expect (response.status ()).toBe (expectedStatus);
