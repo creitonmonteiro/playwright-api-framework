@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@clients/*": [
+                "src/api/clients/*"
+            ],
+            "@services/*": [
+                "src/api/services/*"
+            ],
+            "@schemas/*": [
+                "src/api/schemas/*"
+            ],
+            "@utils/*": [
+                "src/core/utils/*"
+            ],
+            "@fixtures/*": [
+                "src/test-data/fixtures/*"
+            ],
+            "@factories/*": [
+                "src/test-data/factories/*"
+            ]
+        }
+    }
+}
