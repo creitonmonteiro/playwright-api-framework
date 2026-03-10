@@ -7,3 +7,10 @@ export function createUserPayload () {
     password: faker.internet.password (),
   };
 }
+
+export function falseLoginPayload () {
+  return {
+    email: faker.internet.email (),
+    password: faker.internet.password (),
+  };
+}
