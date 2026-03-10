@@ -8,17 +8,20 @@ import UserService from '@services/UserService';
 import AuthService from '@services/AuthService';
 import ProductService from '@services/ProductService';
 
+import {severity} from '@utils/severity';
+
 import {createUserPayload} from '@factories/userFactory';
 import {deleteUserIfExists} from '@utils/userHelper';
 
 import {createProductPayload} from '@factories/productFactory';
 
 import {createDefaultSchema} from '@schemas/common/createDefault.schema';
+import {getProductSchema} from '@schemas/common/getProduct.schema';
 
 import {validateSchema} from '@utils/schemaValidator';
 
 test.describe ('Product API', () => {
-  test.only ('should create a new product successfully', async ({request}) => {
+  test ('should create a new product successfully', async ({request}) => {
     const usersClient = new UsersClient (request);
     const loginClient = new LoginClient (request);
     const productsClient = new ProductsClient (request);
@@ -33,6 +36,8 @@ test.describe ('Product API', () => {
     let body;
     let responseLogin;
 
+    severity.critical ();
+
     await test.step ('create user', async () => {
       await userService.createUser (fakeUser);
     });
@@ -42,7 +47,10 @@ test.describe ('Product API', () => {
     });
 
     await test.step ('create product', async () => {
-      body = await productService.createProduct (fakerProduct, responseLogin.authorization);
+      body = await productService.createProduct (
+        fakerProduct,
+        responseLogin.authorization
+      );
     });
 
     await test.step ('validate product created', async () => {
