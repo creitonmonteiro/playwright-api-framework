@@ -4,8 +4,9 @@ import UsersClient from '@clients/UsersClient';
 
 import UserService from '@services/UserService';
 
+import {severity} from '@utils/severity';
+
 import {createUserPayload} from '@factories/userFactory';
-import {deleteUserIfExists} from '@utils/userHelper';
 
 import {validateSchema} from '@utils/schemaValidator';
 
@@ -13,7 +14,6 @@ import {createDefaultSchema} from '@schemas/common/createDefault.schema';
 import {defaultSchema} from '@schemas/common/default.schema.js';
 import { findUserSchema } from '@schemas/user/findUser.schema';
 
-import userData from '@fixtures/users.json';
 
 test.describe ('User API', () => {
   test ('should create a new user successfully', async ({request}) => {
@@ -24,6 +24,8 @@ test.describe ('User API', () => {
     const fakeUser = createUserPayload ();
 
     let body;
+
+    severity.critical ();
 
     await test.step ('create user', async () => {
       body = await userService.createUser (fakeUser);
@@ -43,21 +45,19 @@ test.describe ('User API', () => {
 
     const userService = new UserService (usersClient);
 
-    const duplicateUser = userData.duplicate;
+    const fakeUser = createUserPayload ();
 
     let body;
 
-    await test.step ('cleanup existing user', async () => {
-      await deleteUserIfExists (usersClient, duplicateUser);
-    });
+    severity.critical ();
 
     await test.step ('create user successfully', async () => {
-      body = await userService.createUser (duplicateUser);
+      body = await userService.createUser (fakeUser);
       validateSchema (createDefaultSchema, body);
     });
 
     await test.step ('create user duplicated', async () => {
-      body = await userService.createUser (duplicateUser, 400);
+      body = await userService.createUser (fakeUser, 400);
     });
 
     await test.step ('validate user created', async () => {
@@ -76,6 +76,8 @@ test.describe ('User API', () => {
 
     let body;
     let userId;
+
+    severity.critical ();
 
     await test.step ('create user', async () => {
       const response = await userService.createUser (fakeUser);
@@ -101,6 +103,8 @@ test.describe ('User API', () => {
 
     let body;
 
+    severity.critical ();
+
     await test.step ('update user', async () => {
       body = await userService.updateUser ('0pxpPY0cbmQhpYz1', fakeUser, 400);
     });
@@ -120,6 +124,8 @@ test.describe ('User API', () => {
 
     let body;
     let userId;
+
+    severity.normal ();
 
     await test.step ('create user', async () => {
       const response = await userService.createUser (fakeUser);
@@ -143,6 +149,8 @@ test.describe ('User API', () => {
 
     let body;
 
+    severity.normal ();
+
     await test.step ('search user', async () => {
       body = await userService.deleteUser ('0pxpPY0cbmQhpYz1');
     });
@@ -162,6 +170,8 @@ test.describe ('User API', () => {
 
     let body;
     let response;
+
+    severity.normal ();
 
     await test.step ('create user', async () => {
       response = await userService.createUser (fakeUser);
@@ -184,6 +194,8 @@ test.describe ('User API', () => {
     const userService = new UserService (usersClient);
 
     let body;
+
+    severity.normal ();
 
     await test.step ('search user', async () => {
       body = await userService.getUser ('0pxpPY0cbmQhpYz1', 400);

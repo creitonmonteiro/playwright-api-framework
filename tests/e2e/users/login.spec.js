@@ -6,13 +6,14 @@ import LoginClient from '@clients/LoginClient';
 import AuthService from '@services/AuthService';
 import UserService from '@services/UserService';
 
+import {severity} from '@utils/severity';
+
 import {validateSchema} from '@utils/schemaValidator';
 
 import {loginSchema} from '@schemas/user/login.schema.js';
 import {defaultSchema} from '@schemas/common/default.schema.js';
 
-import {createUserPayload} from '@factories/userFactory';
-import userData from '@fixtures/users.json';
+import {createUserPayload, falseLoginPayload} from '@factories/userFactory';
 
 test.describe ('Login API', () => {
   test ('should login successfully', async ({request}) => {
@@ -25,6 +26,8 @@ test.describe ('Login API', () => {
     const fakeUser = createUserPayload ();
 
     let body;
+
+    severity.blocker ();
 
     await test.step ('create user', async () => {
       await userService.createUser (fakeUser);
@@ -48,8 +51,10 @@ test.describe ('Login API', () => {
 
     let body;
 
+    severity.normal ();
+
     await test.step ('login with invalid user', async () => {
-      body = await authService.login (userData.invalid, 401);
+      body = await authService.login (falseLoginPayload, 401);
     });
 
     await test.step ('validate invalid login', async () => {
