@@ -6,11 +6,13 @@ export default class ProductService {
   }
 
   async createProduct (product, bearerToken, expectedStatus = 201) {
-    const response = await this.productsClient.createProduct (product, bearerToken);
+    const response = await this.productsClient.createProduct (
+      product,
+      bearerToken
+    );
 
     expect (response.status ()).toBe (expectedStatus);
 
     return response.json ();
   }
-
 }
